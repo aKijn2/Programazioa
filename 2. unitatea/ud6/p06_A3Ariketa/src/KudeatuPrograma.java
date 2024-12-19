@@ -1,3 +1,5 @@
+import java.io.RandomAccessFile;
+import java.util.RandomAccess;
 import java.util.Scanner;
 
 public class KudeatuPrograma {
@@ -37,6 +39,12 @@ public class KudeatuPrograma {
                     TaulaDB t2 = new TaulaDB("datuak.dat");
 
                     t2.idatziErregistroa(izena, adina, pisua, t2.getErregistroaKop() + 1);
+                    t2.itxiTaula();
+
+                    for (int i = 1; i <= t2.getErregistroaKop(); i++) {
+                        Erregistroa r = t2.irakurriErregistroa(i);
+                        System.out.println(r.erakutsiErregistroa());
+                    }
 
                     break;
                 case 4:
