@@ -20,20 +20,26 @@ public class SerializableTest {
 			altuera = teklatua.nextInt();
 			p.setBatazbestekoAltuera(altuera);
 
-			// tmp fitxategia sortuko dugu bertan gordetzeko (tmp = tenporala)
-			// Zuhaitza
+			/**
+			 * tmp fitxategia sortuko dugu bertan gordetzeko (tmp = tenporala) Zuhaitza
+			 */
 			try (FileOutputStream f = new FileOutputStream("tmp");
 					ObjectOutputStream fis = new ObjectOutputStream(f)) {
 				fis.writeObject(p);
 			}
 
-			// tmp fitxategia ireki
+			/**
+			 * tmp fitxategia ireki
+			 */
 			try (FileInputStream fe = new FileInputStream("tmp");
 					ObjectInputStream fie = new ObjectInputStream(fe)) {
 				Zuhaitza z = (Zuhaitza) fie.readObject();
 				System.out.println(z.erakutsiZuhaitza()); // pantaila erakutsi irakurritakoa
 			}
 
+			/**
+			 * Hiru exception-ak tratatzen ditugu
+			 */
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
