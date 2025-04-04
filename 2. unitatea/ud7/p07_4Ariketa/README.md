@@ -1,0 +1,4 @@
+## P07.04 - OOP eta throw bidezko salbuespen sortzea
+Figura izeneko klase bat sortu, eraikitzaileak parametrotzat onartzen baitu irudiaren alde-kopurua (int) eta alde bakoitzaren luzera (double); alde-kopurua 2 edo txikiagoa bada, salbuespen bat sortuko da (throw) eta ez du objektua sortuko. Gauza bera, luzera 0 edo txikiagoa bada. Era berean, irudiaren perimetroa itzultzen duen itzuliPerimetroa () metodoa ere egongo da.
+
+Aurreko klasea erabiliz, egin bi irudi sortzen dituen programa bat eta lortu bi irudietako zeinek duen perimetro handiena. SortuFigura () metodo estatiko bat egin dezakezu. Bertan, datuak eskatuko dira eta balizko salbuespen guztiak atzemango dira. Dena zuzena denean bakarrik sortuko da main () -era itzuliko den irudia.

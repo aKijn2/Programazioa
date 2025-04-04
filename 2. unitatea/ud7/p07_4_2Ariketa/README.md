@@ -1,0 +1,1 @@
+Aurreko klasea erabiliz, egin bi irudi sortzen dituen programa bat eta lortu bi irudietako zeinek duen perimetro handiena. SortuFigura () metodo estatiko bat egin dezakezu. Bertan, datuak eskatuko dira eta balizko salbuespen guztiak atzemango dira. Dena zuzena denean bakarrik sortuko da main () -era itzuliko den irudia.

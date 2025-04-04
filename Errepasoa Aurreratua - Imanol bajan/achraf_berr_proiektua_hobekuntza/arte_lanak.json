@@ -1,0 +1,57 @@
+[ {
+  "izenburua" : "a",
+  "artista" : "a",
+  "tamaina" : "a",
+  "estiloa" : "a",
+  "mota" : "a",
+  "prezioa" : 1.0
+}, {
+  "izenburua" : "s",
+  "artista" : "s",
+  "tamaina" : "s",
+  "estiloa" : "s",
+  "mota" : "s",
+  "prezioa" : 2.0
+}, {
+  "izenburua" : "q",
+  "artista" : "q",
+  "tamaina" : "q",
+  "estiloa" : "q",
+  "mota" : "q",
+  "prezioa" : 1.0
+}, {
+  "izenburua" : "g",
+  "artista" : "g",
+  "tamaina" : "g",
+  "estiloa" : "g",
+  "mota" : "g",
+  "prezioa" : 1.0
+}, {
+  "izenburua" : "a",
+  "artista" : "a",
+  "tamaina" : "a",
+  "estiloa" : "a",
+  "mota" : "a",
+  "prezioa" : 1.0
+}, {
+  "izenburua" : "s",
+  "artista" : "s",
+  "tamaina" : "s",
+  "estiloa" : "s",
+  "mota" : "s",
+  "prezioa" : 2.0
+}, {
+  "izenburua" : "q",
+  "artista" : "q",
+  "tamaina" : "q",
+  "estiloa" : "q",
+  "mota" : "q",
+  "prezioa" : 1.0
+}, {
+  "izenburua" : "g",
+  "artista" : "g",
+  "tamaina" : "g",
+  "estiloa" : "g",
+  "mota" : "g",
+  "prezioa" : 1.0
+} ]

@@ -8,7 +8,6 @@ public class LeeFicheroTexto {
 			FileReader flE = new FileReader("agenda.txt"); // fluxua
 			BufferedReader fE = new BufferedReader(flE); // iragazkia
 
-			
 			while (testua != null) {
 				testua = fE.readLine(); // irakurri testu-lerro bat
 				if (testua != null) {

@@ -1,0 +1,31 @@
+[ {
+  "izena" : "Limoia",
+  "irudia" : "irudiak/limoia.jpg",
+  "prezioa" : 2.5,
+  "stock" : 5
+}, {
+  "izena" : "Sagarra",
+  "irudia" : "irudiak/sagarra.jpg",
+  "prezioa" : 1.8,
+  "stock" : 5
+}, {
+  "izena" : "Laranja",
+  "irudia" : "irudiak/laranja.jpg",
+  "prezioa" : 2.0,
+  "stock" : 15
+}, {
+  "izena" : "Sandia",
+  "irudia" : "irudiak/sandia.jpg",
+  "prezioa" : 4.5,
+  "stock" : 80
+}, {
+  "izena" : "Meloia",
+  "irudia" : "irudiak/meloia.jpg",
+  "prezioa" : 3.8,
+  "stock" : 60
+}, {
+  "izena" : "Fresak",
+  "irudia" : "irudiak/fresak.jpg",
+  "prezioa" : 3.0,
+  "stock" : 25
+} ]
