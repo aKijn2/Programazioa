@@ -117,4 +117,13 @@ public class ArteGalería
             gehituArteLana(arteLana); // Assuming gehituArteLana(ArteLana) exists
         }
     }
+
+    public void gordeJsonFitxategian() {
+        
+        throw new UnsupportedOperationException("Unimplemented method 'gordeJsonFitxategian'");
+    }
+
+    public void kargatuJsonFitxategitik() {
+        throw new UnsupportedOperationException("Unimplemented method 'kargatuJsonFitxategitik'");
+    }
 }
