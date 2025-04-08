@@ -1,9 +1,19 @@
-### Mejorar el código (Proiektu Hobekuntza III)
+# Mis Trabajos de Programación
 
-1. **Añadir opción para exportar el JSON.**
-2. **Mostrar todos los datos al guardar.**  
-	<!-- Actualmente, al guardar, es necesario presionar otro botón para mostrar los datos. -->
-3. **Incluir documentación con Javadoc.**
-4. **Crear un método `main` para ejecutar el código.**
-5. **Refactorizar el código para mejorar su legibilidad y mantenimiento.**
-6. **Generar un archivo `.JAR` para facilitar la ejecución del programa.**
+¡Bienvenido a mi repositorio de programación!  Aquí encontrarás todos los proyectos y ejercicios que he realizado a lo largo del año. 📚✨
+
+## 📂 Estructura del Repositorio
+
+###  Unidades
+Cada unidad contiene trabajos organizados por temas específicos que he aprendido durante el año. Aquí están los temas que he cubierto: 
+
+###  Libre
+En esta carpeta encontrarás mis proyectos más creativos y experimentales. Aquí hago lo que quiero, ¡sin reglas! 
+
+---
+
+## 🌟 ¡Explora y Disfruta!
+Espero que encuentres algo interesante o divertido en este repositorio. ¡Gracias por pasarte por aquí! 😄
+
+
+![Coding Fun](https://media.giphy.com/media/26tn33aiTi1jkl6H6/giphy.gif)
