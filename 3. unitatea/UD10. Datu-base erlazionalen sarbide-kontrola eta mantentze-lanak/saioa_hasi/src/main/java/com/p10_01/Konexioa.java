@@ -163,6 +163,9 @@ public class Konexioa
                         System.out.println("Aukera okerra. Saiatu berriro.");
                         break;
 
+                    case 3:
+                    
+
                     case 0:
                         System.out.println("Irten egiten...");
                         break;
