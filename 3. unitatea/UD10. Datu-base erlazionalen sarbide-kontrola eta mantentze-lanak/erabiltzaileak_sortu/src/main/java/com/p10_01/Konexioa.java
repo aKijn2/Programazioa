@@ -9,7 +9,7 @@ public class Konexioa {
     static final String erabiltzailea = "root";
     static final String pasahitza = "mysql";
 
-    Scanner sc = new Scanner(System.in);
+    Scanner teklatua = new Scanner(System.in);
 
     /**
      * Erabiltzaileak taulan datuak sartzeko metodoa
@@ -19,29 +19,57 @@ public class Konexioa {
     public void erabiltzaileak_sortu(Connection konexioa) {
         try {
             System.out.println("Sartu erabiltzailearen nan-a: ");
-            String nan = sc.nextLine();
+            String nan = teklatua.nextLine();
 
             System.out.println("Sartu erabiltzailearen izena: ");
-            String izena = sc.nextLine();
+            String izena = teklatua.nextLine();
 
             System.out.println("Sartu erabiltzailearen abizena: ");
-            String abizena = sc.nextLine();
+            String abizena = teklatua.nextLine();
 
-            System.out.println("Sartu erabiltzailearen apodoa: ");
-            String apodoa = sc.nextLine();
+            System.out.println("Apodoa sortzen...");
+            String apodoa = izena.substring(0, 1) + abizena + "01";
+
+            // Ikusi apodoa existitzen den
+            String ikusiBadagoen = "SELECT COUNT(*) FROM erabiltzaileak WHERE erabiltzailea = ?";
+
+            PreparedStatement berifikatu = konexioa.prepareStatement(ikusiBadagoen);
+            berifikatu.setString(1, apodoa);
+
+            int kontatu = 0;
+
+            do {
+                var erantzunenPila = berifikatu.executeQuery();
+                if (erantzunenPila.next()) {
+                    kontatu = erantzunenPila.getInt(1);
+                }
+
+                if (kontatu > 0) {
+                    // Apodoa existitzen bada, apodoa aldatuko da
+                    if (apodoa.length() < izena.length() + abizena.length() + 2) {
+                        apodoa = izena.substring(0, apodoa.length() - abizena.length() - 2 + 1) + abizena + "01";
+                    } else {
+                        int number = Integer.parseInt(apodoa.substring(apodoa.length() - 2)) + 1;
+                        apodoa = apodoa.substring(0, apodoa.length() - 2) + String.format("%02d", number);
+                    }
+                }
+            } while (kontatu > 0);
+
+            System.out.println("Apodoa sortu da: " + apodoa);
 
             String pasahitza;
             String pasahitzaErrepikatu;
+
+            /**
+             * Buklea errepikatuko da pasahitzak berdinak izan arte.
+             */
             do {
                 System.out.println("Sartu erabiltzailearen pasahitza: ");
-                pasahitza = sc.nextLine();
+                pasahitza = teklatua.nextLine();
 
                 System.out.println("Erabiltzailearen pasahitza errepikatu: ");
-                pasahitzaErrepikatu = sc.nextLine();
+                pasahitzaErrepikatu = teklatua.nextLine();
 
-                /**
-                 * Mezua hitzuli kondizioaren arabera
-                 */
                 if (!pasahitza.equals(pasahitzaErrepikatu)) {
                     System.out.println("Pasahitzak ez dira berdinak. Saiatu berriro.");
                 } else {
@@ -49,6 +77,17 @@ public class Konexioa {
                 }
 
             } while (!pasahitza.equals(pasahitzaErrepikatu));
+
+            /**
+             * Buklea errepikatuko da pasahitzak 6 karaktere gutxienez izan arte.
+             */
+            do {
+                if (pasahitza.length() < 6) {
+                    System.out.println("Erabiltzailearen pasahitza gutxienez 6 karaktere izan behar ditu.");
+                } else {
+                    System.out.println("Pasahitza ondo sartu da.");
+                }
+            } while (pasahitza.length() < 6);
 
             /**
              * SQL irakurketa: erabiltzaileak taulan datuak sartzeko

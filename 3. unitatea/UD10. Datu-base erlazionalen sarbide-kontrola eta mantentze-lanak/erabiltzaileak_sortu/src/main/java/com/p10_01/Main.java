@@ -17,8 +17,7 @@ public class Main
             Connection konexioa = DriverManager.getConnection(
                     Konexioa.db_url,
                     Konexioa.erabiltzailea,
-                    Konexioa.pasahitza
-                    );
+                    Konexioa.pasahitza);
             System.out.println("Datu-basearekin konektatuta.");
 
             konexioaObj.erabiltzaileak_sortu(konexioa);
