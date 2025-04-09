@@ -2,6 +2,11 @@ package org.proiektua;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Arte galeriako arte lanen bilduma kudeatzen du.
@@ -117,13 +122,27 @@ public class ArteGalería
             gehituArteLana(arteLana); // Assuming gehituArteLana(ArteLana) exists
         }
     }
-
+    
     public void gordeJsonFitxategian() {
-        
-        throw new UnsupportedOperationException("Unimplemented method 'gordeJsonFitxategian'");
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            mapper.writeValue(new File("artegaleria.json"), arteLanak);
+            System.out.println("Datuak JSON fitxategian ondo gorde dira.");
+        } catch (IOException e) {
+            System.err.println("Errorea datuak gordetzean: " + e.getMessage());
+        }
     }
-
+    
     public void kargatuJsonFitxategitik() {
-        throw new UnsupportedOperationException("Unimplemented method 'kargatuJsonFitxategitik'");
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            List<ArteLana> kargatutakoLanak = mapper.readValue(new File("artegaleria.json"), new TypeReference<List<ArteLana>>() {});
+            arteLanak.clear();
+            arteLanak.addAll(kargatutakoLanak);
+            System.out.println("Datuak ondo kargatu dira JSON fitxategitik.");
+        } catch (IOException e) {
+            System.err.println("Errorea datuak kargatzean: " + e.getMessage());
+        }
     }
+    
 }
