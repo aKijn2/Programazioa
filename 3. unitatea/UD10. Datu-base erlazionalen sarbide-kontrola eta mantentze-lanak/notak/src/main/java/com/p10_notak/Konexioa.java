@@ -9,6 +9,12 @@ public class Konexioa
     static final String ERABILTZAILEA = "root";
     static final String PASAHITZA = "pass";
 
+    /**
+     * Datu-basearekin konexioa ezartzen du.
+     * 
+     * @return konexioa ondo dago; bestela null.
+     * @throws Exception Konexioan errore bat gertatzen bada.
+     */
     public Connection konektatu_db() 
     {
         Connection kone = null;

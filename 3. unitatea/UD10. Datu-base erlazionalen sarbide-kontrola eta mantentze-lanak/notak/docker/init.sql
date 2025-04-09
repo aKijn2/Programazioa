@@ -57,3 +57,43 @@ CREATE TABLE notak (
     oharra VARCHAR(255),
     FOREIGN KEY (zeinMatrikula) REFERENCES matrikulak(idMatrikula)
 );
+
+
+-- datuak sartzeko:
+
+-- Zikloak
+INSERT INTO zikloak (idZikloa, izena, familia, maila) VALUES
+('IFCS', 'Informatika Sistemen Garapena', 'Informatika', 'GS'),
+('ASIR', 'Sareen Administrazioa', 'Informatika', 'GS');
+
+-- Erabiltzaileak
+INSERT INTO erabiltzaileak (erabiltzailea, izena, mota, NA, pasahitza) VALUES
+('aosuna', 'Ane Osuna', 'ikasle', '12345678A', 'pasahitza1'),
+('mmartin', 'Mikel Martin', 'ikasle', '23456789B', 'pasahitza2'),
+('itarte', 'Irati Arteaga', 'irakasle', '34567890C', 'pasahitza3'),
+('jherrera', 'Jon Herrera', 'irakasle', '45678901D', 'pasahitza4');
+
+-- Taldeak
+INSERT INTO taldeak (idTaldea, zeinZiklo, zeinTutore) VALUES
+('IFCS1A', 'IFCS', 'itarte'),
+('ASIR1A', 'ASIR', 'jherrera');
+
+-- Ikasgaiak
+INSERT INTO ikasgaiak (kodea, izena, zeinTalde) VALUES
+(101, 'Programazioa', 'IFCS1A'),
+(102, 'Sistemak', 'ASIR1A');
+
+-- Matrikulak
+INSERT INTO matrikulak (zeinIkasgai, zeinIkasle) VALUES
+(101, 'aosuna'),
+(102, 'mmartin');
+
+-- Irakasle-irakats
+INSERT INTO irakasle_irakats (zeinIrakasle, zeinIkasgai) VALUES
+('itarte', 101),
+('jherrera', 102);
+
+-- Notak
+INSERT INTO notak (zeinMatrikula, ebaluaketa, nota, oharra) VALUES
+(1, '1. Ebaluazioa', 8, 'Lan bikaina'),
+(2, '1. Ebaluazioa', 6, 'Hobetzeko tartea dago');

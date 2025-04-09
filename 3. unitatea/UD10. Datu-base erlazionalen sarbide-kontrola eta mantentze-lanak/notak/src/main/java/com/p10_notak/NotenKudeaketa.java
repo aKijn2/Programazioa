@@ -6,12 +6,17 @@ import java.util.Scanner;
 public class NotenKudeaketa 
 {
     private Connection konexioa;
-    private Scanner scan;
+    private Scanner teklatua;
 
+    /**
+     * Instantzia berri bat sortzen dugu.
+     * @param konexioa Notak kudeatzeko erabiliko den datu-basearen konexioa.
+     *                  
+     */
     public NotenKudeaketa(Connection konexioa) 
     {
         this.konexioa = konexioa;
-        this.scan = new Scanner(System.in);
+        this.teklatua = new Scanner(System.in);
     }
 
     // Ikasle baten notak ikusteko
@@ -19,21 +24,26 @@ public class NotenKudeaketa
     {
         try 
         {
-            String sql = "SELECT i.izena, n.ebaluaketa, n.nota, n.oharra " +
+            String sql = 
+                    "SELECT i.izena, n.ebaluaketa, n.nota, n.oharra " +
                     "FROM notak n " +
                     "JOIN matrikulak m ON n.zeinMatrikula = m.idMatrikula " +
                     "JOIN ikasgaiak i ON m.zeinIkasgai = i.kodea " +
                     "WHERE m.zeinIkasle = ?";
+
             PreparedStatement stmt = konexioa.prepareStatement(sql);
             stmt.setString(1, ikasleErab);
             ResultSet emaitza = stmt.executeQuery();
 
             while (emaitza.next()) 
             {
-                System.out.println("Ikasgaia: " + emaitza.getString("izena") +
-                        " | Ebaluaketa: " + emaitza.getString("ebaluaketa") +
-                        " | Nota: " + emaitza.getInt("nota") +
-                        " | Oharra: " + emaitza.getString("oharra"));
+                System.out.println
+                    (
+                        " | Ikasgaia: "     + emaitza.getString("izena") +
+                        " | Ebaluaketa: "   + emaitza.getString("ebaluaketa") +
+                        " | Nota: "         + emaitza.getInt("nota") +
+                        " | Oharra: "       + emaitza.getString("oharra")
+                    );
             }
         } catch (Exception e) 
         {
@@ -47,9 +57,11 @@ public class NotenKudeaketa
         try 
         {
             // Irakaslearen ikasgaiak erakutsi
-            String ikasgaiSQL = "SELECT i.kodea, i.izena FROM ikasgaiak i " +
+            String ikasgaiSQL = 
+                    "SELECT i.kodea, i.izena FROM ikasgaiak i " +
                     "JOIN irakasle_irakats ir ON ir.zeinIkasgai = i.kodea " +
                     "WHERE ir.zeinIrakasle = ?";
+
             PreparedStatement ikasgaiStmt = konexioa.prepareStatement(ikasgaiSQL);
             ikasgaiStmt.setString(1, irakasleErab);
             ResultSet ikasgaiak = ikasgaiStmt.executeQuery();
@@ -61,13 +73,15 @@ public class NotenKudeaketa
             }
 
             System.out.print("Sartu ikasgai kodea: ");
-            int ikasgaiKodea = scan.nextInt();
-            scan.nextLine();
+            int ikasgaiKodea = teklatua.nextInt();
+            teklatua.nextLine();
 
             // Ikasleak erakutsi
-            String matrikSQL = "SELECT m.idMatrikula, e.izena FROM matrikulak m " +
+            String matrikSQL = 
+                    "SELECT m.idMatrikula, e.izena FROM matrikulak m " +
                     "JOIN erabiltzaileak e ON m.zeinIkasle = e.erabiltzailea " +
                     "WHERE m.zeinIkasgai = ?";
+
             PreparedStatement matrikStmt = konexioa.prepareStatement(matrikSQL);
             matrikStmt.setInt(1, ikasgaiKodea);
             ResultSet matrikulak = matrikStmt.executeQuery();
@@ -79,19 +93,22 @@ public class NotenKudeaketa
             }
 
             System.out.print("Sartu matrikula ID: ");
-            int matrikulaId = scan.nextInt();
-            scan.nextLine();
+            int matrikulaId = teklatua.nextInt();
+            teklatua.nextLine();
 
             System.out.print("Sartu ebaluaketa: ");
-            String ebaluaketa = scan.nextLine();
+            String ebaluaketa = teklatua.nextLine();
+
             System.out.print("Sartu nota: ");
-            int nota = scan.nextInt();
-            scan.nextLine();
+            int nota = teklatua.nextInt();
+            teklatua.nextLine();
+
             System.out.print("Sartu oharra: ");
-            String oharra = scan.nextLine();
+            String oharra = teklatua.nextLine();
 
             String insertSQL = "INSERT INTO notak (zeinMatrikula, ebaluaketa, nota, oharra) VALUES (?, ?, ?, ?)";
             PreparedStatement insertStmt = konexioa.prepareStatement(insertSQL);
+
             insertStmt.setInt(1, matrikulaId);
             insertStmt.setString(2, ebaluaketa);
             insertStmt.setInt(3, nota);
@@ -99,34 +116,40 @@ public class NotenKudeaketa
             insertStmt.executeUpdate();
 
             System.out.println("Nota ondo gehitu da.");
+
         } catch (Exception e) 
         {
             e.printStackTrace();
         }
     }
 
-    // Tutore baten ikasleen notak ikusteko
+    // Titore baten ikasleen notak ikusteko
     public void erakutsiTutoreNotak(String tutoreErab) 
     {
         try 
         {
-            String sql = "SELECT e.izena AS ikasleIzena, ik.izena AS ikasgaia, n.ebaluaketa, n.nota " +
+            String sql = 
+                    "SELECT e.izena AS ikasleIzena, ik.izena AS ikasgaia, n.ebaluaketa, n.nota " +
                     "FROM erabiltzaileak e " +
                     "JOIN matrikulak m ON e.erabiltzailea = m.zeinIkasle " +
                     "JOIN notak n ON m.idMatrikula = n.zeinMatrikula " +
                     "JOIN ikasgaiak ik ON m.zeinIkasgai = ik.kodea " +
                     "JOIN taldeak t ON ik.zeinTalde = t.idTaldea " +
                     "WHERE t.zeinTutore = ?";
+
             PreparedStatement stmt = konexioa.prepareStatement(sql);
             stmt.setString(1, tutoreErab);
             ResultSet emaitza = stmt.executeQuery();
 
             while (emaitza.next()) 
             {
-                System.out.println("Ikaslea: " + emaitza.getString("ikasleIzena") +
-                        " | Ikasgaia: " + emaitza.getString("ikasgaia") +
-                        " | Ebaluaketa: " + emaitza.getString("ebaluaketa") +
-                        " | Nota: " + emaitza.getInt("nota"));
+                System.out.println
+                    (
+                        " | Ikaslea: "      + emaitza.getString("ikasleIzena") +
+                        " | Ikasgaia: "     + emaitza.getString("ikasgaia") +
+                        " | Ebaluaketa: "   + emaitza.getString("ebaluaketa") +
+                        " | Nota: "         + emaitza.getInt("nota")
+                    );
             }
         } catch (Exception e) 
         {

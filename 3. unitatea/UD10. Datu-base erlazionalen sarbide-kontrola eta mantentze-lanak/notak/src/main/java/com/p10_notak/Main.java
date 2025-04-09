@@ -36,16 +36,19 @@ public class Main
                 String ikasleErab = teklatua.nextLine();
                 nk.erakutsiNotakIkaslea(ikasleErab);
                 break;
+
             case 2:
                 System.out.print("Sartu irakaslearen erabiltzaile izena: ");
                 String irakasleErab = teklatua.nextLine();
                 nk.sartuNota(irakasleErab);
                 break;
+
             case 3:
                 System.out.print("Sartu tutorearen erabiltzaile izena: ");
                 String tutoreErab = teklatua.nextLine();
                 nk.erakutsiTutoreNotak(tutoreErab);
                 break;
+                
             default:
                 System.out.println("Aukera ez egokia. Mesedez, sartu 1, 2 edo 3.");
                 break;

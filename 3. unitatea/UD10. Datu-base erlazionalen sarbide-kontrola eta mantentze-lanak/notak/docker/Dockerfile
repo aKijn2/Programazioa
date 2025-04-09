@@ -1,14 +1,14 @@
-# Use an OpenJDK base image
+# OpenJDK oinarritutako irudia erabili
 FROM openjdk:17-jdk-slim
 
-# Set the working directory
+# Laneko direktorioa ezarri
 WORKDIR /app
 
-# Copy the compiled JAR file into the container
+# Konpilatutako JAR fitxategia kontainerrera kopiatu
 COPY target/notak.jar /app/notak.jar
 
-# Expose the port your application will run on (if applicable)
+# Aplikazioa exekutatuko den portua exposeatu (beharrezkoa bada)
 EXPOSE 8080
 
-# Command to run the application
+# Aplikazioa exekutatzeko komandoa
 CMD ["java", "-jar", "notak.jar"]
