@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:8.0
+    container_name: mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: programazioa_eskola
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: notak-app
+    depends_on:
+      - database
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../target:/app
+
+volumes:
+  db_data:
