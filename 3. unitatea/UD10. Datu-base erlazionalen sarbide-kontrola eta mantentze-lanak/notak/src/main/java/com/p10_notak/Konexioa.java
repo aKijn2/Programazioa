@@ -7,7 +7,7 @@ public class Konexioa
 {
     static final String DB_URL = "jdbc:mysql://localhost:3306/programazioa_eskola";
     static final String ERABILTZAILEA = "root";
-    static final String PASAHITZA = "pass";
+    static final String PASAHITZA = "mysql";
 
     /**
      * Datu-basearekin konexioa ezartzen du.

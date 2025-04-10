@@ -45,6 +45,7 @@ public class NotenKudeaketa
                         " | Oharra: "       + emaitza.getString("oharra")
                     );
             }
+
         } catch (Exception e) 
         {
             e.printStackTrace();

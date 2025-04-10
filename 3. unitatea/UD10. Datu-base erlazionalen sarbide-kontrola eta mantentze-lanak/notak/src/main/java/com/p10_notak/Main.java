@@ -19,12 +19,12 @@ public class Main
         NotenKudeaketa nk = new NotenKudeaketa(kone);
         Scanner teklatua = new Scanner(System.in);
 
-        System.out.println("====================================");
+        System.out.println("=================================================");
         System.out.println("Mesedez, aukeratu zure rolaren araberako ekintza:");
-        System.out.println("1. Ikasleak: bere notak ikusi");
-        System.out.println("2. Irakasleak: nota bat sartu");
-        System.out.println("3. Tutoreak: bere ikasleen notak ikusi");
-        System.out.println("====================================");
+        System.out.println("1. Ikasleak: bere notak ikusi                    ");
+        System.out.println("2. Irakasleak: nota bat sartu                    ");        
+        System.out.println("3. Tutoreak: bere ikasleen notak ikusi           ");
+        System.out.println("=================================================");
         System.out.print("Aukeratu zenbakia: ");
         int aukera = teklatua.nextInt();
         teklatua.nextLine();
