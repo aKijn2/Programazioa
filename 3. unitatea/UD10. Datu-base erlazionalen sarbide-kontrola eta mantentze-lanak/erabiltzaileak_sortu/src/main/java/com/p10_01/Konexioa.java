@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.util.Scanner;
 
-public class Konexioa {
+public class Konexioa 
+{
+
     static final String db_url = "jdbc:mysql://localhost:3306/programazioa";
     static final String erabiltzailea = "root";
     static final String pasahitza = "mysql";
@@ -12,12 +14,14 @@ public class Konexioa {
     Scanner teklatua = new Scanner(System.in);
 
     /**
-     * Erabiltzaileak taulan datuak sartzeko metodoa
+     * Erabiltzaileak taulan erabiltzaile_berifikatu sartzeko metodoa
      * 
      * @param konexioa Konektatutako datu-basea
      */
-    public void erabiltzaileak_sortu(Connection konexioa) {
-        try {
+    public void erabiltzaile_kudeaketa(Connection konexioa) 
+    {
+        try 
+        {
             System.out.println("Sartu erabiltzailearen nan-a: ");
             String nan = teklatua.nextLine();
 
@@ -30,78 +34,96 @@ public class Konexioa {
             System.out.println("Apodoa sortzen...");
             String apodoa = izena.substring(0, 1) + abizena + "01";
 
-            // Ikusi apodoa existitzen den
-            String ikusiBadagoen = "SELECT COUNT(*) FROM erabiltzaileak WHERE erabiltzailea = ?";
-
-            PreparedStatement berifikatu = konexioa.prepareStatement(ikusiBadagoen);
+            /**
+             * Erabiltzaileak taulan erabiltzailea errepikatzen den egiaztatu
+             */
+            String egiaztatuErab = "SELECT COUNT(*) FROM erabiltzaileak WHERE erabiltzailea = ?";
+            PreparedStatement berifikatu = konexioa.prepareStatement(egiaztatuErab);
             berifikatu.setString(1, apodoa);
 
-            int kontatu = 0;
+            int erabKopurua = 0;
+            int gehituZenb = 1;
 
             do {
-                var erantzunenPila = berifikatu.executeQuery();
-                if (erantzunenPila.next()) {
-                    kontatu = erantzunenPila.getInt(1);
+                var erabPila = berifikatu.executeQuery();
+
+                if (erabPila.next()) {
+                    erabKopurua = erabPila.getInt(1);
                 }
 
-                if (kontatu > 0) {
-                    // Apodoa existitzen bada, apodoa aldatuko da
-                    if (apodoa.length() < izena.length() + abizena.length() + 2) {
-                        apodoa = izena.substring(0, apodoa.length() - abizena.length() - 2 + 1) + abizena + "01";
-                    } else {
-                        int number = Integer.parseInt(apodoa.substring(apodoa.length() - 2)) + 1;
-                        apodoa = apodoa.substring(0, apodoa.length() - 2) + String.format("%02d", number);
-                    }
+                if (erabKopurua > 0) {
+                    gehituZenb++;
+                    apodoa = izena.substring(0, 1) + abizena + String.format("%02d", gehituZenb);
+                    berifikatu.setString(1, apodoa);
+                } else {
+                    break;
                 }
-            } while (kontatu > 0);
 
+            } while (erabKopurua > 0);
             System.out.println("Apodoa sortu da: " + apodoa);
 
             String pasahitza;
-            String pasahitzaErrepikatu;
+            String pasahitzaBi;
 
             /**
              * Buklea errepikatuko da pasahitzak berdinak izan arte.
              */
-            do {
+            do 
+            {
                 System.out.println("Sartu erabiltzailearen pasahitza: ");
                 pasahitza = teklatua.nextLine();
 
                 System.out.println("Erabiltzailearen pasahitza errepikatu: ");
-                pasahitzaErrepikatu = teklatua.nextLine();
+                pasahitzaBi = teklatua.nextLine();
 
-                if (!pasahitza.equals(pasahitzaErrepikatu)) {
-                    System.out.println("Pasahitzak ez dira berdinak. Saiatu berriro.");
-                } else {
+                if (!pasahitza.equals(pasahitzaBi)) 
+                {
+                    System.out.println("Pasahitzak ez dira berdinak.");
+                } 
+                else 
+                {
                     System.out.println("Pasahitzak berdinak dira.");
                 }
 
-            } while (!pasahitza.equals(pasahitzaErrepikatu));
+            } while (!pasahitza.equals(pasahitzaBi));
 
             /**
              * Buklea errepikatuko da pasahitzak 6 karaktere gutxienez izan arte.
              */
-            do {
-                if (pasahitza.length() < 6) {
-                    System.out.println("Erabiltzailearen pasahitza gutxienez 6 karaktere izan behar ditu.");
-                } else {
+            do 
+            {
+                if (pasahitza.length() < 6) 
+                {
+                    System.out.println("Gutxienez 6 karaktere izan behar ditu");
+                } else 
+                {
                     System.out.println("Pasahitza ondo sartu da.");
                 }
             } while (pasahitza.length() < 6);
 
             /**
-             * SQL irakurketa: erabiltzaileak taulan datuak sartzeko
+             * SQL irakurketa: erabiltzaileak taulan erabiltzaile_berifikatu sartzeko
              */
-            String query = "INSERT INTO erabiltzaileak (nan, izena, abizena, erabiltzailea, pasahitza) VALUES (?, ?, ?, ?, ?)";
+            String query = 
+            "INSERT INTO erabiltzaileak " + 
+            "(nan, izena, abizena, erabiltzailea, pasahitza) " +
+            "VALUES (?, ?, ?, ?, ?)";
+
             PreparedStatement preparedStatement = konexioa.prepareStatement(query);
+
             preparedStatement.setString(1, nan);
             preparedStatement.setString(2, izena);
             preparedStatement.setString(3, abizena);
             preparedStatement.setString(4, apodoa);
             preparedStatement.setString(5, pasahitza);
             preparedStatement.executeUpdate();
+
             System.out.println("Erabiltzailea sortu da.");
-        } catch (Exception e) {
+
+            preparedStatement.close();
+
+        } catch (Exception e) 
+        {
             e.printStackTrace();
         }
     }

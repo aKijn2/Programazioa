@@ -3,29 +3,28 @@ package com.p10_01;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-public class Main 
-{
-    public static void main(String[] args) 
-    {
-        Konexioa konexioaObj = new Konexioa();
+public class Main {
+    public static void main(String[] args) {
+
+        Konexioa konektatu = new Konexioa();
 
         /**
          * Datu-basearekin konexioa sortu
          */
-        try 
-        {
-            Connection konexioa = DriverManager.getConnection(
+        try {
+            Connection konexioa = DriverManager.getConnection
+                (
                     Konexioa.db_url,
                     Konexioa.erabiltzailea,
-                    Konexioa.pasahitza);
+                    Konexioa.pasahitza
+                );
+
             System.out.println("Datu-basearekin konektatuta.");
 
-            konexioaObj.erabiltzaileak_sortu(konexioa);
-
+            konektatu.erabiltzaile_kudeaketa(konexioa);
             konexioa.close();
-            System.out.println("Konexioa itxi da.");
-        } catch (Exception e) 
-        {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
