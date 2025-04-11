@@ -19,6 +19,37 @@ public class NotenKudeaketa
         this.teklatua = new Scanner(System.in);
     }
 
+    // Erabiltzaileak izena, abizena, NA zenbakia eta pasahitza sortzeko metodoa
+    public void erabiltzaileaSortu()
+    {
+        System.out.print("Sartu izena: ");
+        String izena = teklatua.nextLine();
+        
+        System.out.print("Sartu abizena: ");
+        String abizena = teklatua.nextLine();
+        
+        System.out.print("Sartu NA zenbakia: ");
+        String naZenbakia = teklatua.nextLine();
+        
+        System.out.print("Sartu pasahitza: ");
+        String pasahitza = teklatua.nextLine();
+        
+        String insertSQL = 
+                "INSERT INTO erabiltzaileak (izena, abizena, NA, pasahitza) " +
+                "VALUES (?, ?, ?, ?)";
+        
+        try {
+            PreparedStatement insertStmt = konexioa.prepareStatement(insertSQL);
+            insertStmt.setString(1, izena);
+            insertStmt.setString(2, abizena);
+            insertStmt.setString(3, naZenbakia);
+            insertStmt.setString(4, pasahitza);
+            insertStmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     // Ikasle baten notak ikusteko
     public void erakutsiNotakIkaslea(String ikasleErab) 
     {
@@ -107,7 +138,11 @@ public class NotenKudeaketa
             System.out.print("Sartu oharra: ");
             String oharra = teklatua.nextLine();
 
-            String insertSQL = "INSERT INTO notak (zeinMatrikula, ebaluaketa, nota, oharra) VALUES (?, ?, ?, ?)";
+            String insertSQL = 
+            "INSERT INTO notak " +
+            "(zeinMatrikula, ebaluaketa, nota, oharra ) " +
+            "VALUES (?, ?, ?, ?)";
+
             PreparedStatement insertStmt = konexioa.prepareStatement(insertSQL);
 
             insertStmt.setInt(1, matrikulaId);

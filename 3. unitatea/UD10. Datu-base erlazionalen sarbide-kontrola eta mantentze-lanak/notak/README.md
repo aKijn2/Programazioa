@@ -1,5 +1,15 @@
 ## Java (JDBC): SQL Eragiketak (SELECT, INSERT, UPDATE, DELETE...)
 
+### dependentziak instalatu
+```bash
+mvn clean install
+```
+
+### jar fitxategia eraiki
+```bash
+java -jar target/notak.jar
+```
+
 ## 1. P10.03 Notak
 
 Hurrengo datu-base diagrama oinarri hartuta, aplikazioa zabaldu honako funtzionalitateak gehitzeko:
