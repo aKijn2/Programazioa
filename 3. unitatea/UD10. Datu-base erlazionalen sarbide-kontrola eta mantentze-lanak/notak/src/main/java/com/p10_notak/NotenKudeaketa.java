@@ -1,51 +1,201 @@
 package com.p10_notak;
 
 import java.sql.*;
-import java.util.Scanner;
+import java.util.*;
 
 public class NotenKudeaketa 
 {
     private Connection konexioa;
     private Scanner teklatua;
+    private Map<String, Integer> saiakerak;
 
-    /**
-     * Instantzia berri bat sortzen dugu.
-     * @param konexioa Notak kudeatzeko erabiliko den datu-basearen konexioa.
-     *                  
-     */
     public NotenKudeaketa(Connection konexioa) 
     {
         this.konexioa = konexioa;
         this.teklatua = new Scanner(System.in);
+        this.saiakerak = new HashMap<>();
     }
 
-    // Erabiltzaileak izena, abizena, NA zenbakia eta pasahitza sortzeko metodoa
+    // ERABILTZAILE SORTZEKO METODOA
     public void erabiltzaileaSortu()
     {
-        System.out.print("Sartu izena: ");
-        String izena = teklatua.nextLine();
-        
-        System.out.print("Sartu abizena: ");
-        String abizena = teklatua.nextLine();
-        
-        System.out.print("Sartu NA zenbakia: ");
-        String naZenbakia = teklatua.nextLine();
-        
-        System.out.print("Sartu pasahitza: ");
-        String pasahitza = teklatua.nextLine();
-        
-        String insertSQL = 
-                "INSERT INTO erabiltzaileak (izena, abizena, NA, pasahitza) " +
-                "VALUES (?, ?, ?, ?)";
-        
-        try {
+        try
+        {
+            System.out.print("Sartu izena eta abizena (adb: Asa Alla): ");
+            String izenaAbizena = teklatua.nextLine().trim();
+    
+            String[] izenAbizenak = izenaAbizena.split("\\s+", 2);
+    
+            if (izenAbizenak.length < 2)
+            {
+                System.out.println("Mesedez, sartu izena eta abizena bananduta.");
+                return;
+            }
+    
+            String izena = izenAbizenak[0].toLowerCase();
+            String abizena = izenAbizenak[1].toLowerCase();
+    
+            System.out.print("Sartu NA zenbakia: ");
+            String naZenbakia = teklatua.nextLine();
+    
+            String pasahitza1, pasahitza2;
+            do {
+                System.out.print("Sartu pasahitza (gutxienez 6 karaktere): ");
+                pasahitza1 = teklatua.nextLine();
+                System.out.print("Berretsi pasahitza: ");
+                pasahitza2 = teklatua.nextLine();
+    
+                if (!pasahitza1.equals(pasahitza2)) {
+                    System.out.println("Pasahitzak ez dira berdinak. Saiatu berriro.");
+                } else if (pasahitza1.length() < 6) {
+                    System.out.println("Pasahitza motzegia da. Gutxienez 6 karaktere behar dira.");
+                }
+            } while (!pasahitza1.equals(pasahitza2) || pasahitza1.length() < 6);
+    
+            System.out.print("Sartu mota (ikasle/irakasle): ");
+            String mota = teklatua.nextLine().toLowerCase();
+    
+            // Erabiltzaile-izena sortu
+            String erabiltzaileIzena = sortuErabiltzaileIzena(izena, abizena);
+    
+            String insertSQL = "INSERT INTO erabiltzaileak (erabiltzailea, izena, NA, pasahitza, mota) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement insertStmt = konexioa.prepareStatement(insertSQL);
-            insertStmt.setString(1, izena);
-            insertStmt.setString(2, abizena);
+            insertStmt.setString(1, erabiltzaileIzena);
+            insertStmt.setString(2, izenaAbizena); // Hemen izena + abizena gordetzen da
             insertStmt.setString(3, naZenbakia);
-            insertStmt.setString(4, pasahitza);
+            insertStmt.setString(4, pasahitza1);
+            insertStmt.setString(5, mota);
+    
             insertStmt.executeUpdate();
-        } catch (SQLException e) {
+    
+            System.out.println("Erabiltzailea sortu da: " + erabiltzaileIzena);
+            listatuErabiltzaileak();
+        } 
+        catch (SQLException e) 
+        {
+            e.printStackTrace();
+        }
+    }
+    
+
+    private String sortuErabiltzaileIzena(String izena, String abizena) throws SQLException 
+    {
+        String baseErab = izena.substring(0, 1) + abizena;
+        baseErab = baseErab.toLowerCase().replaceAll("\\s+", "");
+
+        String erabiltzailea = baseErab;
+        int letraPos = 1;
+        int zenb = 1;
+
+        while (badagoErabiltzailea(erabiltzailea)) 
+        {
+            if (letraPos < izena.length()) 
+            {
+                erabiltzailea = izena.substring(0, letraPos + 1) + abizena;
+                erabiltzailea = erabiltzailea.toLowerCase().replaceAll("\\s+", "");
+                letraPos++;
+            } else 
+            {
+                erabiltzailea = baseErab + String.format("%02d", zenb);
+                zenb++;
+            }
+        }
+        return erabiltzailea;
+    }
+
+    private boolean badagoErabiltzailea(String erabiltzailea) throws SQLException 
+    {
+        String sql = "SELECT COUNT(*) FROM erabiltzaileak WHERE erabiltzailea = ?";
+        PreparedStatement stmt = konexioa.prepareStatement(sql);
+        stmt.setString(1, erabiltzailea);
+        ResultSet rs = stmt.executeQuery();
+        rs.next();
+        return rs.getInt(1) > 0;
+    }
+
+    private void listatuErabiltzaileak() throws SQLException
+    {
+        String sql = "SELECT erabiltzailea, izena, mota FROM erabiltzaileak";
+        Statement stmt = konexioa.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+    
+        System.out.println("== Erabiltzaileak ==");
+        while (rs.next())
+        {
+            System.out.println(rs.getString("erabiltzailea") + " - " + rs.getString("izena") + " (" + rs.getString("mota") + ")");
+        }
+    }
+    
+
+    // SAIOA HASI
+    public void saioaHasi() 
+    {
+        try 
+        {
+            System.out.print("Sartu erabiltzaile izena: ");
+            String erabiltzailea = teklatua.nextLine();
+
+            if (saiakerak.containsKey(erabiltzailea) && saiakerak.get(erabiltzailea) >= 3) 
+            {
+                System.out.println("Blokeatuta zaude. Itxaron 15 segundo...");
+                Thread.sleep(15000);
+                saiakerak.put(erabiltzailea, 0);
+            }
+
+            System.out.print("Sartu pasahitza: ");
+            String pasahitza = teklatua.nextLine();
+
+            String sql = "SELECT izena, abizena, mota FROM erabiltzaileak WHERE erabiltzailea = ? AND pasahitza = ?";
+            PreparedStatement stmt = konexioa.prepareStatement(sql);
+            stmt.setString(1, erabiltzailea);
+            stmt.setString(2, pasahitza);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) 
+            {
+                System.out.println("Ongi etorri: " + rs.getString("izena") + " " + rs.getString("abizena") + " ("
+                        + rs.getString("mota") + ")");
+                saiakerak.put(erabiltzailea, 0);
+            } else 
+            {
+                System.out.println("Errorea: erabiltzaile izena edo pasahitza okerra.");
+                saiakerak.put(erabiltzailea, saiakerak.getOrDefault(erabiltzailea, 0) + 1);
+            }
+        } catch (Exception e) 
+        {
+            e.printStackTrace();
+        }
+    }
+
+    // NOTAK KUDEATZEKO MENUA (ikus/sartu notak)
+    public void menuNotak(String erabiltzaileIzena) 
+    {
+        try 
+        {
+            String sql = "SELECT mota FROM erabiltzaileak WHERE erabiltzailea = ?";
+            PreparedStatement stmt = konexioa.prepareStatement(sql);
+            stmt.setString(1, erabiltzaileIzena);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) 
+            {
+                String mota = rs.getString("mota");
+                if (mota.equals("ikasle")) 
+                {
+                    erakutsiNotakIkaslea(erabiltzaileIzena);
+                } else if (mota.equals("irakasle")) 
+                {
+                    sartuNota(erabiltzaileIzena);
+                } else 
+                {
+                    System.out.println("Ezagutzen ez den mota: " + mota);
+                }
+            } else 
+            {
+                System.out.println("Erabiltzailea ez da existitzen.");
+            }
+        } catch (SQLException e) 
+        {
             e.printStackTrace();
         }
     }
@@ -55,8 +205,7 @@ public class NotenKudeaketa
     {
         try 
         {
-            String sql = 
-                    "SELECT i.izena, n.ebaluaketa, n.nota, n.oharra " +
+            String sql = "SELECT i.izena, n.ebaluaketa, n.nota, n.oharra " +
                     "FROM notak n " +
                     "JOIN matrikulak m ON n.zeinMatrikula = m.idMatrikula " +
                     "JOIN ikasgaiak i ON m.zeinIkasgai = i.kodea " +
@@ -68,13 +217,11 @@ public class NotenKudeaketa
 
             while (emaitza.next()) 
             {
-                System.out.println
-                    (
-                        " | Ikasgaia: "     + emaitza.getString("izena") +
-                        " | Ebaluaketa: "   + emaitza.getString("ebaluaketa") +
-                        " | Nota: "         + emaitza.getInt("nota") +
-                        " | Oharra: "       + emaitza.getString("oharra")
-                    );
+                System.out.println(
+                        " | Ikasgaia: " + emaitza.getString("izena") +
+                                " | Ebaluaketa: " + emaitza.getString("ebaluaketa") +
+                                " | Nota: " + emaitza.getInt("nota") +
+                                " | Oharra: " + emaitza.getString("oharra"));
             }
 
         } catch (Exception e) 
@@ -88,9 +235,7 @@ public class NotenKudeaketa
     {
         try 
         {
-            // Irakaslearen ikasgaiak erakutsi
-            String ikasgaiSQL = 
-                    "SELECT i.kodea, i.izena FROM ikasgaiak i " +
+            String ikasgaiSQL = "SELECT i.kodea, i.izena FROM ikasgaiak i " +
                     "JOIN irakasle_irakats ir ON ir.zeinIkasgai = i.kodea " +
                     "WHERE ir.zeinIrakasle = ?";
 
@@ -108,9 +253,7 @@ public class NotenKudeaketa
             int ikasgaiKodea = teklatua.nextInt();
             teklatua.nextLine();
 
-            // Ikasleak erakutsi
-            String matrikSQL = 
-                    "SELECT m.idMatrikula, e.izena FROM matrikulak m " +
+            String matrikSQL = "SELECT m.idMatrikula, e.izena FROM matrikulak m " +
                     "JOIN erabiltzaileak e ON m.zeinIkasle = e.erabiltzailea " +
                     "WHERE m.zeinIkasgai = ?";
 
@@ -138,10 +281,9 @@ public class NotenKudeaketa
             System.out.print("Sartu oharra: ");
             String oharra = teklatua.nextLine();
 
-            String insertSQL = 
-            "INSERT INTO notak " +
-            "(zeinMatrikula, ebaluaketa, nota, oharra ) " +
-            "VALUES (?, ?, ?, ?)";
+            String insertSQL = "INSERT INTO notak " +
+                    "(zeinMatrikula, ebaluaketa, nota, oharra ) " +
+                    "VALUES (?, ?, ?, ?)";
 
             PreparedStatement insertStmt = konexioa.prepareStatement(insertSQL);
 
@@ -153,40 +295,6 @@ public class NotenKudeaketa
 
             System.out.println("Nota ondo gehitu da.");
 
-        } catch (Exception e) 
-        {
-            e.printStackTrace();
-        }
-    }
-
-    // Titore baten ikasleen notak ikusteko
-    public void erakutsiTutoreNotak(String tutoreErab) 
-    {
-        try 
-        {
-            String sql = 
-                    "SELECT e.izena AS ikasleIzena, ik.izena AS ikasgaia, n.ebaluaketa, n.nota " +
-                    "FROM erabiltzaileak e " +
-                    "JOIN matrikulak m ON e.erabiltzailea = m.zeinIkasle " +
-                    "JOIN notak n ON m.idMatrikula = n.zeinMatrikula " +
-                    "JOIN ikasgaiak ik ON m.zeinIkasgai = ik.kodea " +
-                    "JOIN taldeak t ON ik.zeinTalde = t.idTaldea " +
-                    "WHERE t.zeinTutore = ?";
-
-            PreparedStatement stmt = konexioa.prepareStatement(sql);
-            stmt.setString(1, tutoreErab);
-            ResultSet emaitza = stmt.executeQuery();
-
-            while (emaitza.next()) 
-            {
-                System.out.println
-                    (
-                        " | Ikaslea: "      + emaitza.getString("ikasleIzena") +
-                        " | Ikasgaia: "     + emaitza.getString("ikasgaia") +
-                        " | Ebaluaketa: "   + emaitza.getString("ebaluaketa") +
-                        " | Nota: "         + emaitza.getInt("nota")
-                    );
-            }
         } catch (Exception e) 
         {
             e.printStackTrace();

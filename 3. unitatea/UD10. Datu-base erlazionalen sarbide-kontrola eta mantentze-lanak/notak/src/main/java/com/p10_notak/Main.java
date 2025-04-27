@@ -12,46 +12,48 @@ public class Main
 
         if (kone == null) 
         {
-            System.out.println("Ez da datubasearekin konektatu.");
+            System.out.println("Ez da datu-basearekin konektatu.");
             return;
         }
 
         NotenKudeaketa nk = new NotenKudeaketa(kone);
         Scanner teklatua = new Scanner(System.in);
 
-        System.out.println("=================================================");
-        System.out.println("Mesedez, aukeratu zure rolaren araberako ekintza:");
-        System.out.println("1. Ikasleak: bere notak ikusi                    ");
-        System.out.println("2. Irakasleak: nota bat sartu                    ");        
-        System.out.println("3. Tutoreak: bere ikasleen notak ikusi           ");
-        System.out.println("=================================================");
-        System.out.print("Aukeratu zenbakia: ");
-        int aukera = teklatua.nextInt();
-        teklatua.nextLine();
+        int aukera = 0;
 
-        switch (aukera) 
+        while (aukera != 4)
         {
-            case 1:
-                System.out.print("Sartu ikaslearen erabiltzaile izena: ");
-                String ikasleErab = teklatua.nextLine();
-                nk.erakutsiNotakIkaslea(ikasleErab);
-                break;
+            System.out.println("=================================================");
+            System.out.println("Mesedez, aukeratu ekintza:");
+            System.out.println("1. Erabiltzaile berria sortu");
+            System.out.println("2. Saioa hasi");
+            System.out.println("3. Notak kudeatu (ikasle/irakasle/tutore)");
+            System.out.println("4. Irten");
+            System.out.println("=================================================");
+            System.out.print("Aukeratu zenbakia: ");
+            
+            aukera = teklatua.nextInt();
+            teklatua.nextLine();
 
-            case 2:
-                System.out.print("Sartu irakaslearen erabiltzaile izena: ");
-                String irakasleErab = teklatua.nextLine();
-                nk.sartuNota(irakasleErab);
-                break;
-
-            case 3:
-                System.out.print("Sartu tutorearen erabiltzaile izena: ");
-                String tutoreErab = teklatua.nextLine();
-                nk.erakutsiTutoreNotak(tutoreErab);
-                break;
-                
-            default:
-                System.out.println("Aukera ez egokia. Mesedez, sartu 1, 2 edo 3.");
-                break;
+            switch (aukera) 
+            {
+                case 1:
+                    nk.erabiltzaileaSortu();
+                    break;
+                case 2:
+                    nk.saioaHasi();
+                    break;
+                case 3:
+                    System.out.print("Sartu erabiltzaile izena: ");
+                    String erabiltzaileIzena = teklatua.nextLine();
+                    nk.menuNotak(erabiltzaileIzena);
+                    break;
+                case 4:
+                    System.out.println("Agur!");
+                    break;
+                default:
+                    System.out.println("Aukera ez egokia.");
+            }
         }
         teklatua.close();
     }
