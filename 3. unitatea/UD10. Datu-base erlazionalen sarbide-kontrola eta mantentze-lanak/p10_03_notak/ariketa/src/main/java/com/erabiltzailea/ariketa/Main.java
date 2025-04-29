@@ -24,7 +24,7 @@ public class Main
             }
 
             // Taula sortu
-            Erabiltzaileak.taulaGehitu(connection);
+            Erabiltzaileak.sortuTaula(connection);
 
             // Saioa hasteko metodoa.
             boolean saioaHasiDa = Erabiltzaileak.saioaHasi(connection, sc);
