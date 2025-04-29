@@ -20,6 +20,7 @@ public class Main
         NotenKudeaketa nk = new NotenKudeaketa(kone);
         Scanner teklatua = new Scanner(System.in);
 
+<<<<<<< HEAD
         int saioaHasi = -1;
 
         while (saioaHasi != 0) 
@@ -76,6 +77,40 @@ public class Main
                     System.out.println("Programatik irteten...");
                     break;
 
+=======
+        int aukera = 0;
+
+        while (aukera != 4)
+        {
+            System.out.println("=================================================");
+            System.out.println("Mesedez, aukeratu ekintza:");
+            System.out.println("1. Erabiltzaile berria sortu");
+            System.out.println("2. Saioa hasi");
+            System.out.println("3. Notak kudeatu (ikasle/irakasle/tutore)");
+            System.out.println("4. Irten");
+            System.out.println("=================================================");
+            System.out.print("Aukeratu zenbakia: ");
+            
+            aukera = teklatua.nextInt();
+            teklatua.nextLine();
+
+            switch (aukera) 
+            {
+                case 1:
+                    nk.erabiltzaileaSortu();
+                    break;
+                case 2:
+                    nk.saioaHasi();
+                    break;
+                case 3:
+                    System.out.print("Sartu erabiltzaile izena: ");
+                    String erabiltzaileIzena = teklatua.nextLine();
+                    nk.menuNotak(erabiltzaileIzena);
+                    break;
+                case 4:
+                    System.out.println("Agur!");
+                    break;
+>>>>>>> 079c1521f96fccb9f6c91a404fb56f0b5abb0a4e
                 default:
                     System.out.println("Aukera ez egokia.");
             }
