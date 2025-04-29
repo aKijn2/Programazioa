@@ -10,35 +10,32 @@ import java.util.Scanner;
 public class Erabiltzaileak 
 {
 
-    // region Erabiltzailea gehitzeko metodoa.
-    public static void erabiltzaileaGehitu(Connection konexioa, Scanner sc) 
+    public static void erabiltzaileaGehitu(Connection konexioa, Scanner teklatua) 
     {
         try 
         {
             System.out.println("Nan: ");
-            String nan = sc.next();
+            String nan = teklatua.next();
 
             System.out.println("Izena: ");
-            String izena = sc.next();
+            String izena = teklatua.next();
 
             System.out.println("Abizena: ");
-            String erabizena = sc.next();
+            String erabizena = teklatua.next();
 
             System.out.println("Mota (ikaslea/irakaslea): ");
-            String mota = sc.next();
+            String mota = teklatua.next();
 
             String erabiltzailea = izena.substring(0, 1).toLowerCase() + erabizena.toLowerCase();
 
-            // Ikusi ea erabiltzailea existitzen den.
-            String erabiltzaileaExistitzenBaldinBada = "SELECT * FROM erabiltzaileak WHERE erabiltzailea = ?";
-            PreparedStatement preparedStatementErabiltzaileaExistitzenBaldinBada = konexioa
-                    .prepareStatement(erabiltzaileaExistitzenBaldinBada);
+            String erabBadago = "SELECT * FROM erabiltzaileak WHERE erabiltzailea = ?";
 
-            preparedStatementErabiltzaileaExistitzenBaldinBada.setString(1, erabiltzailea);
+            PreparedStatement erabBadagoBalidatu = konexioa.prepareStatement(erabBadago);
 
-            ResultSet resultSet = preparedStatementErabiltzaileaExistitzenBaldinBada.executeQuery();
+            erabBadagoBalidatu.setString(1, erabiltzailea);
 
-            // Erabiltzailea existitzen bada, erabiltzailea, zenbakia gehituko di.
+            ResultSet resultSet = erabBadagoBalidatu.executeQuery();
+
             if (resultSet.next()) 
             {
                 int count = 1;
@@ -50,10 +47,10 @@ public class Erabiltzaileak
             }
 
             System.out.println("Pasahitza: ");
-            String pasahitza1 = sc.next();
+            String pasahitza1 = teklatua.next();
 
             System.out.println("Pasahitza berriro sartu: ");
-            String pasahitza2 = sc.next();
+            String pasahitza2 = teklatua.next();
 
             if (!pasahitza1.equals(pasahitza2)) 
             {
@@ -67,23 +64,22 @@ public class Erabiltzaileak
                 return;
             }
 
-            // Query exekutatu erabiltzailea datu basean kartzeko.
-            String insertQuery = "INSERT INTO erabiltzaileak " +
+            String datuakSartu = "INSERT INTO erabiltzaileak " +
                     "(erabiltzailea, erabizena, izena, mota, NA, pasahitza) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
 
-            PreparedStatement preparedStatement = konexioa.prepareStatement(insertQuery);
+            PreparedStatement datuakSartuObjetua = konexioa.prepareStatement(datuakSartu);
 
-            preparedStatement.setString(1, erabiltzailea);
-            preparedStatement.setString(2, erabizena);
-            preparedStatement.setString(3, izena);  
-            preparedStatement.setString(4, mota);
-            preparedStatement.setString(5, nan);
-            preparedStatement.setString(6, pasahitza1);
+            datuakSartuObjetua.setString(1, erabiltzailea);
+            datuakSartuObjetua.setString(2, erabizena);
+            datuakSartuObjetua.setString(3, izena);
+            datuakSartuObjetua.setString(4, mota);
+            datuakSartuObjetua.setString(5, nan);
+            datuakSartuObjetua.setString(6, pasahitza1);
 
-            int affectedRows = preparedStatement.executeUpdate();
+            int erronkadak = datuakSartuObjetua.executeUpdate();
 
-            if (affectedRows > 0) 
+            if (erronkadak > 0) 
             {
                 System.out.println("Erabiltzailea ongi gehitu da.");
             } else 
@@ -91,7 +87,6 @@ public class Erabiltzaileak
                 System.out.println("Errorea erabiltzailea gehitzean.");
             }
 
-            // List users after adding a new user
             erabiltzaileakListatu(konexioa);
         } catch (SQLException e) 
         {
@@ -99,13 +94,6 @@ public class Erabiltzaileak
             System.out.println("Errorea erabiltzailea gehitzean.");
         }
     }
-    // endregion
-
-    /**
-     * Metodo hau datu baseko erabiltzaileen zerrenda erakusten du.
-     *
-     * @param konexioa Datu basearekin konexioa
-     */
 
     public static void erabiltzaileakListatu(Connection konexioa) 
     {
@@ -124,8 +112,9 @@ public class Erabiltzaileak
                 String erabiltzailea = resultSet.getString("erabiltzailea");
                 String mota = resultSet.getString("mota");
 
-                System.out.println("NAN: " + nan + ", Izena: " + izena + ", Erabizena: " + erabizena + ", Erabiltzailea: "
-                        + erabiltzailea + ", Mota: " + mota);
+                System.out
+                        .println("NAN: " + nan + ", Izena: " + izena + ", Erabizena: " + erabizena + ", Erabiltzailea: "
+                                + erabiltzailea + ", Mota: " + mota);
             }
         } catch (SQLException e) 
         {
@@ -133,13 +122,6 @@ public class Erabiltzaileak
             System.out.println("Errorea erabiltzaileak listatzean.");
         }
     }
-    // endregion
-
-    /**
-     * Metodo hau erabiltzaile bat ezabatzen du datu basean.
-     *
-     * @param erabiltzaileaEzabatu
-     */
 
     public static void erabiltzaileaEzabatu(Connection konexioa, Scanner sc) 
     {
@@ -170,14 +152,6 @@ public class Erabiltzaileak
             System.out.println("Errorea erabiltzailea ezabatzean.");
         }
     }
-
-    // endregion
-
-    /**
-     * Metodo hau saioa hasi eta erabiltzailea autentifikatzen du.
-     *
-     * @return boolean - Saioa ondo hasi den ala ez
-     */
 
     public static boolean saioaHasi(Connection konexioa, Scanner sc) 
     {
@@ -306,23 +280,16 @@ public class Erabiltzaileak
                 System.out.println("Errorea saioa hastean.");
             }
         }
-        System.out.println("Akatsa: Hurrengo 15 segunduetan saioa berriro saioa hasteko saiatu.");
+        System.out.println("Akatsa: Hurrengo 3 segunduetan saioa berriro saioa hasteko saiatu.");
         try 
         {
-            Thread.sleep(15000); // 15 segundu itxaron
+            Thread.sleep(3000); // 3 segundu itxaron
         } catch (InterruptedException e) 
         {
             e.printStackTrace();
         }
         return false;
     }
-    // endregion
-
-    /**
-     * Metodo hau erabiltzaile bati haren notak ikusteko erabiltzen da.
-     *
-     * @param ikasleakNotakIkusi
-     */
 
     public static void ikasleakNotakIkusi(Connection konexioa, Scanner sc, String erabiltzaileIzena) 
     {
@@ -350,13 +317,6 @@ public class Erabiltzaileak
             System.out.println("Errorea notak ikustean.");
         }
     }
-    // endregion
-
-    /**
-     * Metodo hau irakasle baten notak sartzeko erabiltzen da.
-     *
-     * @param irakasleakNotakSartu
-     */
 
     public static void irakasleakNotakSartu(Connection konexioa, Scanner sc, String erabiltzaileIzena) 
     {
@@ -399,11 +359,6 @@ public class Erabiltzaileak
         }
     }
 
-    /**
-     * Metodo hau datu-baseko taula guztiak sortzeko erabiltzen da.
-     *
-     * @param konexioa Datu basearekin konexioa
-     */
     public static void sortuTaula(Connection konexioa) 
     {
         try 
