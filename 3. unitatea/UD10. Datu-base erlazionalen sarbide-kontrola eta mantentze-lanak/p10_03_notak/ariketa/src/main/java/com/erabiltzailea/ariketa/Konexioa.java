@@ -2,25 +2,20 @@ package com.erabiltzailea.ariketa;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
+/**
+ * Datu basearekin konexioa egiteko klasea.
+ * 
+ * DB_URL, USER eta PASSWORD aldagaiek datu basearekin konektatzeko behar diren informazioa gordetzen dute.
+ */
 public class Konexioa 
 {
+    static final String DB_URL = "jdbc:mysql://localhost:3306/programazioa_eskola"; 
+    static final String USER = "root"; 
+    static final String PASSWORD = "mysql";
 
-    /**
-     * Metodo honek konexioa sortzen du datu-basearekin.
-     * 
-     * @return Konexio objektua
-     * @throws SQLException Konexioaren errorea
-     */
-    public Connection getKonekzioa() throws SQLException 
+    public static Connection konektatu() throws Exception 
     {
-        String DB_URL = "jdbc:mysql://localhost/erabiltzaileak";
-        String USER = "root";
-        String PASS = "mysql";
-
-        Connection connection = DriverManager.getConnection(DB_URL, USER, PASS);
-
-        return connection;
+        return DriverManager.getConnection(DB_URL, USER, PASSWORD);
     }
 }

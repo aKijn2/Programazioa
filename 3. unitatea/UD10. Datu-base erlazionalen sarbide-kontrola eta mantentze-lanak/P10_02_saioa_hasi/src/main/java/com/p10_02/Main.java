@@ -1,4 +1,4 @@
-package com.erabiltzailea.ariketa;
+package main.java.com.p10_02;
 
 import java.sql.Connection;
 
@@ -8,13 +8,9 @@ public class Main
     {
         try (Connection conn = Konexioa.konektatu()) 
         {
-            /**
-             * DBra konektatu eta erabiltzaile kudeaketa klasea exekutatu.
-             */
             System.out.println("DB konektatuta.");
             ErabiltzaileKudeaketa serv = new ErabiltzaileKudeaketa();
             serv.exekutatuMenua(conn);
-
         } catch (Exception e) 
         {
             e.printStackTrace();
